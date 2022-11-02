@@ -1,115 +1,73 @@
-package com.example.saboloocal
+package com.example.myapplication
 
-
-import android.annotation.SuppressLint
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.*
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var text1:TextView
-    private var operation  = " "
-    private var operand1 = 0.0
-    @SuppressLint("MissingInflatedId")
+    private lateinit var resultTextView: TextView
+    private var operand:Double = 0.0
+    private var operation = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
-        text1 = findViewById(R.id.TextView)
-
-
-
-
+        resultTextView = findViewById(R.id.resultText)
     }
 
-    fun onclick(clickedview: View) {
-        if (clickedview is TextView){
-            var number = clickedview.text.toString()
-            var text = text1.text.toString()
+    fun numberClick (clickedView: View) {
+        if (clickedView is TextView) {
+            var result = resultTextView.text.toString()
+            val number = clickedView.text.toString()
 
-            if (text == "0"){
-                text = ""
+            if (result == "0") {
+                result = ""
             }
-            text1.text = text + number
 
+            resultTextView.text = result + number
         }
-
-
     }
+    fun operationClick (clickedView: View) {
+        if (clickedView is TextView) {
+            var operand = resultTextView.text.toString()
+            this.operand = operand.toDouble()
+            operation = clickedView.text.toString()
 
-    fun operationClick(clickedview: View) {
-        if (clickedview is TextView){
-            operation = clickedview.text.toString()
-
-            operand1 = text1.text.toString().toDouble()
-            text1.text = "0"
+            resultTextView.text = "0"
         }
-
     }
-
-    fun equalsClick(clickedview: View) {
-
-        var operand2 = text1.text.toString().toDouble()
-        if (operation == " "){
-            text1.text = text1.text.toString()
-        }else {
-            when (operation) {
-
-                "+" -> text1.text = (operand1 + operand2).toString()
-                "-" -> text1.text = (operand1 - operand2).toString()
-                "*" -> text1.text = (operand1 * operand2).toString()
-                "/" -> text1.text = (operand1 / operand2).toString()
-
-            }
-            operation = " "
-            operand1
-            var newnumber = text1.text.toString()
-            if (newnumber.substring(newnumber.length - 2, newnumber.length) == ".0") {
-                text1.text = newnumber.substring(0, newnumber.length - 2)
-            }
+    fun equalsClick(clickedView: View) {
+        val secOperand = resultTextView.text.toString().toDouble()
+//        print(operation)
+        when (operation) {
+            "+" -> resultTextView.text = (operand + secOperand).toString()
+            "-" -> resultTextView.text = (operand - secOperand).toString()
+            "/" -> resultTextView.text = (operand / secOperand).toString()
+            "*" -> resultTextView.text = (operand * secOperand).toString()
         }
-
+        if (".0" == resultTextView.text.toString().substring(resultTextView.text.toString().length-2, resultTextView.text.toString().length)){
+            resultTextView.text = resultTextView.text.toString().substring(0, resultTextView.text.toString().length-2)
+        }
+        operation = ""
+        operand = 0.0
     }
 
-    fun cleartxt(view: View) {
-        text1.text = "0"
-        operand1 = 0.0
+    fun clearClick(clickedView: View){
+        resultTextView.text = "0"
     }
 
-    fun delete(view: View) {
-        var newoperand1 = operand1.toString().substring(0,operand1.toString().length-2)
-
-        var txt = text1.text .toString()
-
-        if (txt.length == 1 && operand1 ==0.0) {
-            text1.text = "0"
-        }else if (txt.length == 1){
-            text1.text = newoperand1
-            operand1 = 0.0
-
-
-        }else {
-            text1.text = txt.substring(0, txt.length - 1)
+    fun delClick(clickedView: View){
+        if (resultTextView.text.toString().length > 1){
+            resultTextView.text = resultTextView.text.toString().substring(0, resultTextView.text.toString().length-1)
+        }else{
+            resultTextView.text = "0"
         }
     }
 
-    fun dotclick(view: View) {
-        var dotexists = false
-        var txt = text1.text.toString()
-        for (i in 0 until txt.length  ){
-            if (txt[i]=='.'){
-                dotexists = true
-            }
+    fun pointClick(clickedView: View){
+        if (!resultTextView.text.contains(".")){
+            resultTextView.text = resultTextView.text.toString() + "."
         }
-        if (dotexists == false){
-            text1.text = txt + '.'
-        }
-
     }
-
 
 }
-
-
